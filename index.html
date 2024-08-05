@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Circumference Calculator</title>
+    <title>Calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,8 +23,6 @@
             width: 100%;
             height: cover;
             max-width: 500px;
-
-            
         }
         h1 {
             text-align: center;
@@ -51,52 +49,119 @@
             border-radius: 5px;
             margin-top: 10px;
         }
-
         .button-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
         }
         .button-container button {
-            width: 48%;
+            width: 40%;
         }
         .scrollable {
-            max-height: 500px; /* Adjust this height as needed */
+            max-height: 500px;
             overflow-y: auto;
         }
-
-        .input
-        {
+        .input {
             width: 475px;
         }
-
-        .footer
-        {
+        .footer {
             text-align: center;
             font-size: 12px;
             opacity: 50%;
         }
+        .tabs {
+            display: flex;
+            cursor: pointer;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #ddd;
+            margin: 0 5px;
+            border-radius: 5px;
+        }
+        .tab-active {
+            background-color: #5cb85c;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content-active {
+            display: block;
+        }
+        .radio-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px; /* Adjust the gap as needed */
+    
+}
+
+
+
     </style>
 </head>
 <body>
 
 <div class="container">
-<div class="scrollable">
-    <h1>Circumference Calculator</h1>
-    <label for="nameSubject">Enter Subject (eg: Ball):</label>
-    <input class = input type="text" id="nameSubject" placeholder="Subject Name">
-    <label for="num">Enter number of subjects:</label>
-    <input class = input type="number" id="num" placeholder="Number of Subjects">
-    <div id="diameterInputs" ></div>
-    <div class="button-container">
-        <button onclick="calculateCircumference()">Calculate</button>
-        <button onclick="resetFields()">Reset</button>
+    <div class="tabs">
+        <div class="tab tab-active" onclick="showTab('circumference')">Circumference</div>
+        <div class="tab" onclick="showTab('weight')">Weight</div>
     </div>
-    <div class="result" id="result"></div>
-    <p class = footer>© Nasrin Sahira 2024.</p>
-</div>
+    <div id="circumference" class="tab-content tab-content-active">
+        <div class="scrollable">
+            <h1>Circumference Calculator</h1>
+            <p><label for="nameSubject">Enter Subject (eg: Ball):</label></p>
+            <input class="input" type="text" id="nameSubject" placeholder="Subject Name">
+            <p><label for="num">Enter number of subjects:</label></p>
+            <input class="input" type="number" id="num" placeholder="Number of Subjects">
+            <div id="diameterInputs"></div>
+            <div class="button-container">
+                <button onclick="calculateCircumference()">Calculate</button>&nbsp&nbsp
+                <button onclick="resetFields()">Reset</button>
+            </div>
+            <div class="result" id="result"></div>
+            <p class="footer">© Nasrin Sahira 2024.</p>
+        </div>
+    </div>
+    <div id="weight" class="tab-content">
+        <div class="scrollable">
+            <h1>Weight Calculator</h1>
+            <label for="weightUnit">Select Weight Unit:</label>&nbsp &nbsp
+            <div class="radio-container">
+                <input type="radio" id="kg" name="weightUnit" value="kg" checked/>Kilogram
+                <input type="radio" id="g" name="weightUnit" value="g"/>Grams
+            </div>
+            <p><label for="weightValue">Enter weight:</label><br>
+            <input class="input" type="number" id="weightValue" placeholder="Weight"></p>
+            <p><label for="numPacks">Enter number of packs:</label><br>
+            <input class="input" type="number" id="numPacks" placeholder="Number of Packs"></p>
+            <div class="button-container">
+                <button onclick="calculateWeight()">Calculate</button>&nbsp &nbsp
+                <button onclick="resetWeightFields()">Reset</button>
+            </div>
+            <div class="result" id="weightResult"></div>
+            <p class="footer">© Nasrin Sahira 2024.</p>
+        </div>
+    </div>
 </div>
 
 <script>
+    function showTab(tabId) {
+        let tabs = document.querySelectorAll('.tab');
+        let tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.classList.remove('tab-active');
+        });
+        tabContents.forEach(content => {
+            content.classList.remove('tab-content-active');
+        });
+
+        document.getElementById(tabId).classList.add('tab-content-active');
+        document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('tab-active');
+    }
+
     let pi = 3.14159265359;
 
     function createDiameterInputs(num) {
@@ -151,7 +216,32 @@
         document.getElementById('diameterInputs').innerHTML = '';
         document.getElementById('result').innerHTML = '';
     }
+
+    function calculateWeight() {
+        let weightUnit = document.querySelector('input[name="weightUnit"]:checked').value;
+        let weightValue = parseFloat(document.getElementById('weightValue').value);
+        let numPacks = parseFloat(document.getElementById('numPacks').value);
+
+        if (weightUnit === 'g') {
+            weightValue /= 1000; // Convert grams to kilograms
+        }
+
+        let totalWeight = weightValue * numPacks;
+
+        let resultHTML = `<h3>Calculated Total Weight:</h3>`;
+        resultHTML += `<p>Total Weight: ${totalWeight.toFixed(2)} kg</p>`;
+
+        document.getElementById('weightResult').innerHTML = resultHTML;
+    }
+
+    function resetWeightFields() {
+        document.getElementById('weightValue').value = '';
+        document.getElementById('kg').checked = true;
+        document.getElementById('numPacks').value = '';
+        document.getElementById('weightResult').innerHTML = '';
+    }
 </script>
 
 </body>
 </html>
+
